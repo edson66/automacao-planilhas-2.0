@@ -14,15 +14,14 @@ public class DadosService {
 
     private static final DecimalFormat df = new DecimalFormat("#,##0.00");
 
-    public static Map<String,String> lerArquivoDoador(String caminho) throws FileNotFoundException {
-        Map<String,String> dados = new HashMap<>();
+    public static List<Map<String,Object>> lerArquivoDoador(String caminho) throws FileNotFoundException {
+        List<Map<String,Object>> dados = new ArrayList<>();
 
         try(FileInputStream inputStream = new FileInputStream(new File(caminho));
             Workbook workbook = new XSSFWorkbook(inputStream)) {
             Sheet sheet = workbook.getSheetAt(0);
 
-            int linhaAtual = 0;
-            int contadorItens = 1;
+            int linhaAtual = 2;
 
             while (true){
                 Row row = sheet.getRow(linhaAtual);
@@ -31,20 +30,26 @@ public class DadosService {
                     break;
                 }
 
-                String keyItens = "<ITEM" + String.valueOf(contadorItens) + ">";
-                dados.put(keyItens,row.getCell(0).getStringCellValue());
+                Map<String,Object> itemDaLinha = new HashMap<>();
 
-                String keyUn = "<UN" + String.valueOf(contadorItens) + ">";
-                dados.put(keyUn,row.getCell(1).getStringCellValue());
+                itemDaLinha.put("ITEM",getCellValue(row.getCell(0)));
 
-                String keyQt = "<QT" + String.valueOf(contadorItens) + ">";
-                dados.put(keyQt,String.valueOf((int) row.getCell(2).getNumericCellValue()));
+                itemDaLinha.put("UN",getCellValue(row.getCell(1)));
 
-                String keyValor = "<VALOR" + String.valueOf(contadorItens) + ">";
-                dados.put(keyValor,lerComoDinheiro(row.getCell(3)));
+                if (row.getCell(2) != null && row.getCell(2).getCellType() == CellType.NUMERIC) {
+                    itemDaLinha.put("QT", (int) row.getCell(2).getNumericCellValue());
+                } else {
+                    itemDaLinha.put("QT", 0);
+                }
 
+                if (row.getCell(3) != null && row.getCell(3).getCellType() == CellType.NUMERIC) {
+                    itemDaLinha.put("VALOR", row.getCell(3).getNumericCellValue());
+                } else {
+                    itemDaLinha.put("VALOR", 0.0);
+                }
+
+                dados.add(itemDaLinha);
                 linhaAtual++;
-                contadorItens++;
             }
 
 
@@ -52,6 +57,46 @@ public class DadosService {
             throw new RuntimeException(e);
         }
         return dados;
+    }
+
+    public static Map<String,String> lerDadosEscolas(String caminho,String cnpj){
+
+        Map<String,String> dadosEscola = new HashMap<>();
+
+        try(FileInputStream inputStream = new FileInputStream(new File(caminho));
+        Workbook workbook = new XSSFWorkbook(inputStream)){
+
+            boolean encontrou = false;
+            DataFormatter dataFormatter = new DataFormatter();
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (Row row:sheet){
+                if (row.getRowNum() == 0) continue;
+
+                String cnpjEmString = dataFormatter.formatCellValue(row.getCell(0)).trim();
+
+                if (cnpjEmString.equals(cnpj)){
+
+                    dadosEscola.put("<NOME>", dataFormatter.formatCellValue(row.getCell(1)));
+                    dadosEscola.put("<CNPJ>", dataFormatter.formatCellValue(row.getCell(2)));
+                    dadosEscola.put("<CEP>", dataFormatter.formatCellValue(row.getCell(3)));
+                    dadosEscola.put("<CIDADE>", dataFormatter.formatCellValue(row.getCell(4)));
+                    dadosEscola.put("<DIRETOR>", dataFormatter.formatCellValue(row.getCell(5)));
+
+                    encontrou = true;
+                    break;
+                }
+            }
+
+            if (!encontrou){
+                throw new RuntimeException("escola não encontrada");
+            }
+
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
+
+        return dadosEscola;
     }
 
     private static String lerComoDinheiro(Cell cell) {
@@ -68,36 +113,6 @@ public class DadosService {
     private static boolean isCellEmpty(Cell cell) {
         return cell == null || cell.getCellType() == CellType.BLANK
                 || (cell.getCellType() == CellType.STRING && cell.getStringCellValue().trim().isEmpty());
-    }
-
-
-    public static void preencherTemplate(String caminhoEntrada,String caminhoSaida,Map<String,String> dados){
-        try(FileInputStream inputStream = new FileInputStream(new File(caminhoEntrada));
-            Workbook workbook = new XSSFWorkbook(inputStream)) {
-
-            for (Sheet sheet:workbook){
-                for (Row row:sheet){
-                    for (Cell cell: row){
-                        if (cell.getCellType() == CellType.STRING){
-                            String valorAtual = cell.getStringCellValue();
-
-                            if (dados.containsKey(valorAtual)) {
-                                cell.setCellValue(dados.get(valorAtual));
-                            }
-
-                        }
-                    }
-                }
-            }
-
-            try (FileOutputStream out = new FileOutputStream(new File(caminhoSaida))) {
-                workbook.write(out);
-            }
-            System.out.println("Arquivo gerado com sucesso: " + caminhoSaida);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private static String getCellValue(Cell cell) {
