@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.example.Main.scanner;
+
 public class DadosService {
 
     private static final DecimalFormat df = new DecimalFormat("#,##0.00");
@@ -96,7 +98,111 @@ public class DadosService {
             throw new RuntimeException(e);
         }
 
+        System.out.println("Escola encontrada: " + dadosEscola.get("<NOME>"));
+
         return dadosEscola;
+    }
+
+    public static Map<String,String> lerDadosAdicionais(Map<String,String> dadosEscolas){
+
+        String[] meses = {
+                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        };
+
+        System.out.println("Digite o número da nota-");
+        String nf = scanner.nextLine();
+        dadosEscolas.put("NF",nf);
+
+        System.out.println("Data dos orçamentos(dia)-");
+        String diaOrcamentos = scanner.nextLine();
+        dadosEscolas.put("DIA_ORCAMENTOS",diaOrcamentos);
+
+        int mesOrcamentos = 0;
+        boolean mesValido = false;
+
+        while (!mesValido) {
+            try {
+                System.out.println("Data dos orçamentos (mês 1-12):");
+                String entrada = scanner.nextLine();
+
+                int mesDigitado = Integer.parseInt(entrada);
+
+                String teste = meses[mesDigitado - 1];
+
+                mesOrcamentos = mesDigitado;
+                mesValido = true;
+
+            } catch (NumberFormatException e) {
+                System.out.println("Erro: Você digitou letras. Digite apenas NÚMEROS (ex: 5).");
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Erro: Mês inexistente. Digite um número entre 1 e 12.");
+            }
+        }
+        dadosEscolas.put("MES_ORCAMENTOS", String.valueOf(mesOrcamentos));
+
+        System.out.println("Data dos orçamentos(ano)-");
+        String anoOrcamentos = scanner.nextLine();
+        dadosEscolas.put("ANO_ORCAMENTOS",anoOrcamentos);
+
+        String dataOrcamentos = diaOrcamentos + " de " + meses[mesOrcamentos-1] + " de " + anoOrcamentos;
+        dadosEscolas.put("DATA_ORCAMENTOS",dataOrcamentos);
+
+        System.out.println("Consolidação? (S/N)");
+        String temConsolidacaoStr = scanner.nextLine();
+
+
+        if (temConsolidacaoStr.equalsIgnoreCase("S")){
+
+            dadosEscolas.put("TEM_CONSOLIDACAO","S");
+
+            System.out.println("Data da Consolidacao(dia)-");
+            String diaConsolidacao = scanner.nextLine();
+            dadosEscolas.put("DIA_CONSOLIDACAO",diaConsolidacao);
+
+            System.out.println("Data da Consolidacao(mês)-");
+            String mesConsolidacao = scanner.nextLine();
+
+            dadosEscolas.put("MES_CONSOLIDACAO",mesConsolidacao);
+
+            System.out.println("Data da Consolidacao(ano)-");
+            String anoConsolidacao = scanner.nextLine();
+            dadosEscolas.put("ANO_CONSOLIDACAO",anoConsolidacao);
+
+        } else if (temConsolidacaoStr.equalsIgnoreCase("N")) {
+            dadosEscolas.put("TEM_CONSOLIDACAO","N");
+        } else {
+            System.out.println("Resposta inválida,considerando como NÃO");
+            dadosEscolas.put("TEM_CONSOLIDACAO","N");
+        }
+
+        System.out.println("Recibo? (S/N)");
+        String temReciboStr = scanner.nextLine();
+
+        if (temReciboStr.equalsIgnoreCase("S")){
+
+            dadosEscolas.put("TEM_RECIBO","S");
+
+            System.out.println("Data do Recibo(dia)-");
+            String diaRecibo = scanner.nextLine();
+            dadosEscolas.put("DIA_RECIBO",diaRecibo);
+
+            System.out.println("Data do Recibo(mês)-");
+            String mesRecibo = scanner.nextLine();
+            dadosEscolas.put("MES_RECIBO",mesRecibo);
+
+            System.out.println("Data do Recibo(ano)-");
+            String anoRecibo = scanner.nextLine();
+            dadosEscolas.put("ANO_RECIBO",anoRecibo);
+
+        } else if (temReciboStr.equalsIgnoreCase("N")) {
+            dadosEscolas.put("TEM_RECIBO","N");
+        }else {
+            System.out.println("Resposta inválida,considerando como NÃO");
+            dadosEscolas.put("TEM_RECIBO","N");
+        }
+
+        return dadosEscolas;
     }
 
     private static String lerComoDinheiro(Cell cell) {

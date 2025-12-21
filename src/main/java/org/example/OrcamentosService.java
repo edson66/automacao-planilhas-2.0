@@ -12,22 +12,22 @@ import java.util.Map;
 
 public class OrcamentosService {
 
-    public void preencherNce(String caminhoEntrada, String caminhoSaida,
-                             Map<String,String> dadosEscola, List<Map<String,Object>> itens) throws IOException {
+    public static void preencherNce(String caminhoEntrada, String caminhoSaida,
+                             Map<String,String> dadosCabecalho, List<Map<String,Object>> itens) throws IOException {
 
         try(FileInputStream inputStream = new FileInputStream(new File(caminhoEntrada));
             Workbook workbook = new XSSFWorkbook(inputStream)){
 
             Sheet sheet = workbook.getSheetAt(0);
 
-            for (int i = 0; i < 7; i++) {
+            for (int i = 5; i < 11; i++) {
                 Row row = sheet.getRow(i);
                 if (row != null){
                     for (Cell cell:row){
                         if (cell.getCellType() == CellType.STRING){
                             String texto = cell.getStringCellValue();
 
-                            for (Map.Entry<String,String> entry : dadosEscola.entrySet()){
+                            for (Map.Entry<String,String> entry : dadosCabecalho.entrySet()){
                                 if (texto.contains(entry.getKey())){
                                     texto = texto.replace(entry.getKey(),entry.getValue());
                                     cell.setCellValue(texto);
@@ -38,7 +38,7 @@ public class OrcamentosService {
                 }
             }
 
-            int linhaInicialTabela = 7;
+            int linhaInicialTabela = 14;
 
             for (Map<String,Object> item:itens){
                 Row row = sheet.getRow(linhaInicialTabela);
@@ -80,22 +80,22 @@ public class OrcamentosService {
         }
     }
 
-    public void preencherPaper(String caminhoEntrada, String caminhoSaida,
-                               Map<String,String> dadosEscola, List<Map<String,Object>> itens){
+    public static void preencherPaper(String caminhoEntrada, String caminhoSaida,
+                               Map<String,String> dadosCabecalho, List<Map<String,Object>> itens){
 
         try(FileInputStream inputStream = new FileInputStream(new File(caminhoEntrada));
             Workbook workbook = new XSSFWorkbook(inputStream)){
 
             Sheet sheet = workbook.getSheetAt(0);
 
-            for (int i = 0; i < 7; i++) {
+            for (int i = 6; i < 13; i++) {
                 Row row = sheet.getRow(i);
                 if (row != null){
                     for (Cell cell:row){
                         if (cell.getCellType() == CellType.STRING){
                             String texto = cell.getStringCellValue();
 
-                            for (Map.Entry<String,String> entry : dadosEscola.entrySet()){
+                            for (Map.Entry<String,String> entry : dadosCabecalho.entrySet()){
                                 if (texto.contains(entry.getKey())){
                                     texto = texto.replace(entry.getKey(),entry.getValue());
                                     cell.setCellValue(texto);
@@ -106,7 +106,7 @@ public class OrcamentosService {
                 }
             }
 
-            int linhaInicialTabela = 7;
+            int linhaInicialTabela = 16;
 
             for (Map<String,Object> item:itens){
                 Row row = sheet.getRow(linhaInicialTabela);
@@ -148,22 +148,22 @@ public class OrcamentosService {
         }
     }
 
-    public void preencherGrafite(String caminhoEntrada, String caminhoSaida,
-                                 Map<String,String> dadosEscola, List<Map<String,Object>> itens){
+    public static void preencherGrafite(String caminhoEntrada, String caminhoSaida,
+                                 Map<String,String> dadosCabecalho, List<Map<String,Object>> itens){
 
         try(FileInputStream inputStream = new FileInputStream(new File(caminhoEntrada));
             Workbook workbook = new XSSFWorkbook(inputStream)){
 
             Sheet sheet = workbook.getSheetAt(0);
 
-            for (int i = 0; i < 7; i++) {
+            for (int i = 6; i < 10; i++) {
                 Row row = sheet.getRow(i);
                 if (row != null){
                     for (Cell cell:row){
                         if (cell.getCellType() == CellType.STRING){
                             String texto = cell.getStringCellValue();
 
-                            for (Map.Entry<String,String> entry : dadosEscola.entrySet()){
+                            for (Map.Entry<String,String> entry : dadosCabecalho.entrySet()){
                                 if (texto.contains(entry.getKey())){
                                     texto = texto.replace(entry.getKey(),entry.getValue());
                                     cell.setCellValue(texto);
@@ -174,7 +174,7 @@ public class OrcamentosService {
                 }
             }
 
-            int linhaInicialTabela = 7;
+            int linhaInicialTabela = 11;
 
             for (Map<String,Object> item:itens){
                 Row row = sheet.getRow(linhaInicialTabela);
