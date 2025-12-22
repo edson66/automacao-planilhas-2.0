@@ -34,6 +34,7 @@ public class Main {
         System.out.println("Digite o NOME do arquivo doador-");
         String arq = scanner.nextLine();
         List<Map<String,Object>> itens = DadosService.lerArquivoDoador("src/main/resources/" + arq + ".xlsx");
+        DadosService.aplicarRegrasDeNegocio(itens);
 
 
 

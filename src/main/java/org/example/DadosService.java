@@ -5,10 +5,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.example.Main.scanner;
 
@@ -206,15 +203,61 @@ public class DadosService {
         return dadosEscolas;
     }
 
-    private static String lerComoDinheiro(Cell cell) {
-        if (cell == null) return "0,00";
+    public static void aplicarRegrasDeNegocio(List<Map<String, Object>> itens) {
 
-        if (cell.getCellType() == CellType.NUMERIC) {
-            double valor = cell.getNumericCellValue();
-            return df.format(valor);
-        }else{
-            return cell.getStringCellValue().replace(".", ",");
+        Map<Double, Double[]> cachePrecos = new HashMap<>();
+        Random random = new Random();
+
+        for (Map<String, Object> item : itens) {
+            Object valorObj = item.get("VALOR");
+            double valorAtual = (valorObj instanceof Number) ? ((Number) valorObj).doubleValue() : 0.0;
+
+            if (valorAtual == 0.0) {
+                item.put("VALOR_PAPER", 0.0);
+                item.put("VALOR_GRAFITE", 0.0);
+                continue;
+            }
+
+            if (cachePrecos.containsKey(valorAtual)) {
+                Double[] precosCalculados = cachePrecos.get(valorAtual);
+                item.put("VALOR_PAPER", precosCalculados[0]);
+                item.put("VALOR_GRAFITE", precosCalculados[1]);
+                continue;
+            }
+
+            double minPctPaper, maxPctPaper, minPctGrafite, maxPctGrafite;
+
+            if (valorAtual < 5.00) {
+                minPctPaper = 0.25; maxPctPaper = 0.30;
+                minPctGrafite = 0.30; maxPctGrafite = 0.35;
+            } else if (valorAtual < 50.00) {
+                minPctPaper = 0.15; maxPctPaper = 0.25;
+                minPctGrafite = 0.15; maxPctGrafite = 0.25;
+            } else {
+                minPctPaper = 0.10; maxPctPaper = 0.12;
+                minPctGrafite = 0.10; maxPctGrafite = 0.13;
+            }
+
+            double pctPaper = minPctPaper + (maxPctPaper - minPctPaper) * random.nextDouble();
+            double valorPaper = arredondarPara05(valorAtual * (1 + pctPaper));
+
+            double pctGrafite = minPctGrafite + (maxPctGrafite - minPctGrafite) * random.nextDouble();
+            double valorGrafite = arredondarPara05(valorAtual * (1 + pctGrafite));
+
+            if (Math.abs(valorGrafite - valorPaper) <= 0.05) {
+                valorGrafite = valorPaper + 0.10;
+            }
+
+            item.put("VALOR_PAPER", valorPaper);
+            item.put("VALOR_GRAFITE", valorGrafite);
+
+            cachePrecos.put(valorAtual, new Double[]{valorPaper, valorGrafite});
         }
+    }
+
+
+    private static double arredondarPara05(double valor) {
+        return Math.round(valor * 20.0) / 20.0;
     }
 
     private static boolean isCellEmpty(Cell cell) {

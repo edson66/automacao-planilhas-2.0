@@ -135,7 +135,7 @@ public class OrcamentosService {
 
                 Cell cellValor = row.getCell(4);
                 if (cellValor == null) cellValor = row.createCell(4);
-                Object valorObj = item.get("VALOR");
+                Object valorObj = item.get("VALOR_PAPER");
                 double valorValue = (valorObj instanceof Number)? ((Number) valorObj).doubleValue():0.0;
                 cellValor.setCellValue(valorValue);
 
@@ -207,7 +207,7 @@ public class OrcamentosService {
 
                 Cell cellValor = row.getCell(4);
                 if (cellValor == null) cellValor = row.createCell(4);
-                Object valorObj = item.get("VALOR");
+                Object valorObj = item.get("VALOR_GRAFITE");
                 double valorValue = (valorObj instanceof Number)? ((Number) valorObj).doubleValue():0.0;
                 cellValor.setCellValue(valorValue);
 
