@@ -21,7 +21,7 @@ public class DadosService {
 
         try(FileInputStream inputStream = new FileInputStream(new File(caminho));
             Workbook workbook = new XSSFWorkbook(inputStream)) {
-            Sheet sheet = workbook.getSheetAt(0);
+            Sheet sheet = workbook.getSheetAt(9);
 
             int linhaAtual = 2;
 
@@ -34,18 +34,18 @@ public class DadosService {
 
                 Map<String,Object> itemDaLinha = new HashMap<>();
 
-                itemDaLinha.put("ITEM",getCellValue(row.getCell(0)));
+                itemDaLinha.put("ITEM",getCellValue(row.getCell(1)));
 
-                itemDaLinha.put("UN",getCellValue(row.getCell(1)));
+                itemDaLinha.put("UN",getCellValue(row.getCell(2)));
 
-                if (row.getCell(2) != null && row.getCell(2).getCellType() == CellType.NUMERIC) {
-                    itemDaLinha.put("QT", (int) row.getCell(2).getNumericCellValue());
+                if (row.getCell(3) != null && row.getCell(3).getCellType() == CellType.NUMERIC) {
+                    itemDaLinha.put("QT", (int) row.getCell(3).getNumericCellValue());
                 } else {
                     itemDaLinha.put("QT", 0);
                 }
 
-                if (row.getCell(3) != null && row.getCell(3).getCellType() == CellType.NUMERIC) {
-                    itemDaLinha.put("VALOR", row.getCell(3).getNumericCellValue());
+                if (row.getCell(5) != null && row.getCell(5).getCellType() == CellType.NUMERIC) {
+                    itemDaLinha.put("VALOR", row.getCell(5).getNumericCellValue());
                 } else {
                     itemDaLinha.put("VALOR", 0.0);
                 }
@@ -83,7 +83,8 @@ public class DadosService {
                     dadosEscola.put("<CNPJ>", dataFormatter.formatCellValue(row.getCell(2)));
                     dadosEscola.put("<CEP>", dataFormatter.formatCellValue(row.getCell(3)));
                     dadosEscola.put("<CIDADE>", dataFormatter.formatCellValue(row.getCell(4)));
-                    dadosEscola.put("<DIRETOR>", dataFormatter.formatCellValue(row.getCell(5)));
+                    dadosEscola.put("<ENDEREÇO>", dataFormatter.formatCellValue(row.getCell(5)));
+                    dadosEscola.put("<DIRETOR>", dataFormatter.formatCellValue(row.getCell(6)));
 
                     encontrou = true;
                     break;
@@ -106,8 +107,8 @@ public class DadosService {
     public static Map<String,String> lerDadosAdicionais(Map<String,String> dadosEscolas){
 
         String[] meses = {
-                "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+                "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO",
+                "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"
         };
 
         System.out.println("Digite o número da nota-");
@@ -145,8 +146,8 @@ public class DadosService {
         String anoOrcamentos = scanner.nextLine();
         dadosEscolas.put("ANO_ORCAMENTOS",anoOrcamentos);
 
-        String dataOrcamentos = diaOrcamentos + " de " + meses[mesOrcamentos-1] + " de " + anoOrcamentos;
-        dadosEscolas.put("DATA_ORCAMENTOS",dataOrcamentos);
+        String dataOrcamentos = diaOrcamentos + " DE " + meses[mesOrcamentos-1] + " DE " + anoOrcamentos;
+        dadosEscolas.put("<DATA>",dataOrcamentos);
 
         System.out.println("Consolidação? (S/N)");
         String temConsolidacaoStr = scanner.nextLine();

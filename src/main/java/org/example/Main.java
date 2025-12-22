@@ -33,14 +33,14 @@ public class Main {
 
         System.out.println("Digite o NOME do arquivo doador-");
         String arq = scanner.nextLine();
-        List<Map<String,Object>> itens = DadosService.lerArquivoDoador("src/main/resources/" + arq + ".xlxs");
+        List<Map<String,Object>> itens = DadosService.lerArquivoDoador("src/main/resources/" + arq + ".xlsx");
 
 
 
 
-        String saidaNce = "ORÇAMENTO NF" + dadosCabecalhos.get("NF") + " " +
+        String saidaNce = "src/main/resources/arquivos/ORÇAMENTO NF" + dadosCabecalhos.get("NF") + " " +
                 dadosCabecalhos.get("ANO_ORCAMENTOS")+ "-" + dadosCabecalhos.get("MES_ORCAMENTOS")
-                 + "-" + dadosCabecalhos.get("DIA_ORCAMENTOS") + "NCE.xlsx";
+                 + "-" + dadosCabecalhos.get("DIA_ORCAMENTOS") + " NCE.xlsx";
         OrcamentosService.preencherNce(
                 "src/main/resources/MODELO NCE JAVA.xlsx",
                 saidaNce,
@@ -48,9 +48,9 @@ public class Main {
                 itens
         );
 
-        String saidaPaper = "ORÇAMENTO NF" + dadosCabecalhos.get("NF") + " " +
+        String saidaPaper = "src/main/resources/arquivos/ORÇAMENTO NF" + dadosCabecalhos.get("NF") + " " +
                 dadosCabecalhos.get("ANO_ORCAMENTOS")+ "-" + dadosCabecalhos.get("MES_ORCAMENTOS")
-                + "-" + dadosCabecalhos.get("DIA_ORCAMENTOS") + "PAPER.xlsx";
+                + "-" + dadosCabecalhos.get("DIA_ORCAMENTOS") + " PAPER&CO.xlsx";
         OrcamentosService.preencherPaper(
                 "src/main/resources/MODELO PAPER JAVA.xlsx",
                 saidaPaper,
@@ -58,9 +58,9 @@ public class Main {
                 itens
         );
 
-        String saidaGrafite = "ORÇAMENTO NF" + dadosCabecalhos.get("NF") + " " +
+        String saidaGrafite = "src/main/resources/arquivos/ORÇAMENTO NF" + dadosCabecalhos.get("NF") + " " +
                 dadosCabecalhos.get("ANO_ORCAMENTOS")+ "-" + dadosCabecalhos.get("MES_ORCAMENTOS")
-                + "-" + dadosCabecalhos.get("DIA_ORCAMENTOS") + "GRAFITE.xlsx";
+                + "-" + dadosCabecalhos.get("DIA_ORCAMENTOS") + " GRAFITE.xlsx";
         OrcamentosService.preencherGrafite(
                 "src/main/resources/MODELO GRAFITE JAVA.xlsx",
                 saidaGrafite,

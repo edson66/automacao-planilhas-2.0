@@ -70,6 +70,9 @@ public class OrcamentosService {
 
                 linhaInicialTabela++;
             }
+
+            workbook.setForceFormulaRecalculation(true);
+
             try(FileOutputStream outputStream = new FileOutputStream(new File(caminhoSaida))){
                 workbook.write(outputStream);
             }
@@ -138,6 +141,9 @@ public class OrcamentosService {
 
                 linhaInicialTabela++;
             }
+
+            workbook.setForceFormulaRecalculation(true);
+
             try(FileOutputStream outputStream = new FileOutputStream(new File(caminhoSaida))){
                 workbook.write(outputStream);
             }
@@ -166,7 +172,8 @@ public class OrcamentosService {
                             for (Map.Entry<String,String> entry : dadosCabecalho.entrySet()){
                                 if (texto.contains(entry.getKey())){
                                     texto = texto.replace(entry.getKey(),entry.getValue());
-                                    cell.setCellValue(texto);
+                                    String textoFormatado = formatarTextoTitle(texto);
+                                    cell.setCellValue(textoFormatado);
                                 }
                             }
                         }
@@ -206,6 +213,9 @@ public class OrcamentosService {
 
                 linhaInicialTabela++;
             }
+
+            workbook.setForceFormulaRecalculation(true);
+
             try(FileOutputStream outputStream = new FileOutputStream(new File(caminhoSaida))){
                 workbook.write(outputStream);
             }
@@ -214,5 +224,30 @@ public class OrcamentosService {
         }catch (IOException e){
             throw new RuntimeException("Erro ao processar GRAFITE: " + e.getMessage());
         }
+    }
+
+    private static String formatarTextoTitle(String texto) {
+        if (texto == null || texto.isEmpty()) {
+            return "";
+        }
+
+        String[] palavras = texto.toLowerCase().split("\\s+");
+        StringBuilder resultado = new StringBuilder();
+
+        List<String> ignorar = List.of("de", "da", "do");
+
+        for (String palavra : palavras) {
+            if (!palavra.isEmpty()) {
+                if (ignorar.contains(palavra)) {
+                    resultado.append(palavra);
+                } else {
+                    resultado.append(Character.toUpperCase(palavra.charAt(0)))
+                            .append(palavra.substring(1));
+                }
+                resultado.append(" ");
+            }
+        }
+
+        return resultado.toString().trim();
     }
 }
