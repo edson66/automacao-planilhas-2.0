@@ -24,14 +24,18 @@ public class Main {
         System.out.println("Digite o cnpj da escola que deseja buscar(apenas números)-");
         String cnpj = scanner.nextLine();
 
-        List<Map<String,Object>> itens = DadosService.lerArquivoDoador("src/main/resources/tabela3.xlsx");
-
         Map<String,String> dadosEscola = DadosService.lerDadosEscolas(
                 "src/main/resources/escolas.xlsx",
                 cnpj
         );
 
         Map<String,String> dadosCabecalhos = DadosService.lerDadosAdicionais(dadosEscola);
+
+        System.out.println("Digite o NOME do arquivo doador-");
+        String arq = scanner.nextLine();
+        List<Map<String,Object>> itens = DadosService.lerArquivoDoador("src/main/resources/" + arq + ".xlxs");
+
+
 
 
         String saidaNce = "ORÇAMENTO NF" + dadosCabecalhos.get("NF") + " " +
