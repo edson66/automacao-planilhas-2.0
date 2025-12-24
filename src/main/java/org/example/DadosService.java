@@ -81,7 +81,7 @@ public class DadosService {
                     dadosEscola.put("<CEP>", dataFormatter.formatCellValue(row.getCell(3)));
                     dadosEscola.put("<CIDADE>", dataFormatter.formatCellValue(row.getCell(4)));
                     dadosEscola.put("<ENDEREÇO>", dataFormatter.formatCellValue(row.getCell(5)));
-                    dadosEscola.put("<DIRETOR>", dataFormatter.formatCellValue(row.getCell(6)));
+                    dadosEscola.put("DIRETOR", dataFormatter.formatCellValue(row.getCell(6)));
 
                     encontrou = true;
                     break;
@@ -116,27 +116,8 @@ public class DadosService {
         String diaOrcamentos = scanner.nextLine();
         dadosEscolas.put("DIA_ORCAMENTOS",diaOrcamentos);
 
-        int mesOrcamentos = 0;
-        boolean mesValido = false;
+        int mesOrcamentos = verificarMesValido();
 
-        while (!mesValido) {
-            try {
-                System.out.println("Data dos orçamentos (mês 1-12):");
-                String entrada = scanner.nextLine();
-
-                int mesDigitado = Integer.parseInt(entrada);
-
-                String teste = meses[mesDigitado - 1];
-
-                mesOrcamentos = mesDigitado;
-                mesValido = true;
-
-            } catch (NumberFormatException e) {
-                System.out.println("Erro: Você digitou letras. Digite apenas NÚMEROS (ex: 5).");
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("Erro: Mês inexistente. Digite um número entre 1 e 12.");
-            }
-        }
         dadosEscolas.put("MES_ORCAMENTOS", String.valueOf(mesOrcamentos));
 
         System.out.println("Data dos orçamentos(ano)-");
@@ -158,14 +139,18 @@ public class DadosService {
             String diaConsolidacao = scanner.nextLine();
             dadosEscolas.put("DIA_CONSOLIDACAO",diaConsolidacao);
 
-            System.out.println("Data da Consolidacao(mês)-");
-            String mesConsolidacao = scanner.nextLine();
-
-            dadosEscolas.put("MES_CONSOLIDACAO",mesConsolidacao);
+            int mesConsolidacao = verificarMesValido();
+            dadosEscolas.put("MES_CONSOLIDACAO", String.valueOf(mesConsolidacao));
 
             System.out.println("Data da Consolidacao(ano)-");
             String anoConsolidacao = scanner.nextLine();
             dadosEscolas.put("ANO_CONSOLIDACAO",anoConsolidacao);
+
+            String dataConsolidacao = diaConsolidacao + " DE " +
+                    OrcamentosService.formatarTextoTitle(meses[mesConsolidacao-1]) +
+                    " DE " + anoConsolidacao;
+            dadosEscolas.put("DATA_CONS",dataConsolidacao);
+
 
         } else if (temConsolidacaoStr.equalsIgnoreCase("N")) {
             dadosEscolas.put("TEM_CONSOLIDACAO","N");
@@ -183,15 +168,19 @@ public class DadosService {
 
             System.out.println("Data do Recibo(dia)-");
             String diaRecibo = scanner.nextLine();
-            dadosEscolas.put("DIA_RECIBO",diaRecibo);
+            dadosEscolas.put("DIA_R",diaRecibo);
 
             System.out.println("Data do Recibo(mês)-");
             String mesRecibo = scanner.nextLine();
-            dadosEscolas.put("MES_RECIBO",mesRecibo);
+            dadosEscolas.put("MES_R",mesRecibo);
 
             System.out.println("Data do Recibo(ano)-");
             String anoRecibo = scanner.nextLine();
-            dadosEscolas.put("ANO_RECIBO",anoRecibo);
+            dadosEscolas.put("ANO_R",anoRecibo);
+
+            System.out.println("Pago por meio de-");
+            String pagoPor = scanner.nextLine();
+            dadosEscolas.put("MEIO",pagoPor);
 
         } else if (temReciboStr.equalsIgnoreCase("N")) {
             dadosEscolas.put("TEM_RECIBO","N");
@@ -253,6 +242,38 @@ public class DadosService {
 
             cachePrecos.put(valorAtual, new Double[]{valorPaper, valorGrafite});
         }
+    }
+
+    private static int verificarMesValido() {
+
+        String[] meses = {
+                "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO",
+                "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"
+        };
+
+        int mesOrcamentos = 0;
+        boolean mesValido = false;
+
+        while (!mesValido) {
+            try {
+                System.out.println("(mês 1-12):");
+                String entrada = scanner.nextLine();
+
+                int mesDigitado = Integer.parseInt(entrada);
+
+                String teste = meses[mesDigitado - 1];
+
+                mesOrcamentos = mesDigitado;
+                mesValido = true;
+
+
+            } catch (NumberFormatException e) {
+                System.out.println("Erro: Você digitou letras. Digite apenas NÚMEROS (ex: 5).");
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Erro: Mês inexistente. Digite um número entre 1 e 12.");
+            }
+        }
+        return mesOrcamentos;
     }
 
 

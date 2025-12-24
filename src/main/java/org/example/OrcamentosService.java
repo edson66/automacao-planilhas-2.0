@@ -226,7 +226,7 @@ public class OrcamentosService {
         }
     }
 
-    private static String formatarTextoTitle(String texto) {
+    public static String formatarTextoTitle(String texto) {
         if (texto == null || texto.isEmpty()) {
             return "";
         }
