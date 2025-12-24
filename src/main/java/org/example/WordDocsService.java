@@ -29,7 +29,7 @@ public class WordDocsService {
 
                     dadosLinha.put("ITEM" + placeholder,dadosLinha.get("ITEM"));
                     dadosFinais.put("UN" + placeholder, dadosLinha.get("UN"));
-                    dadosFinais.put("QT" + placeholder, dadosLinha.get("QT"));
+                    dadosFinais.put("Q" + placeholder, dadosLinha.get("QT"));
 
                     dadosFinais.put("vA" + placeholder, df.format(dadosLinha.get("VALOR")));
                     dadosFinais.put("vB" + placeholder, df.format(dadosLinha.get("VALOR_PAPER")));

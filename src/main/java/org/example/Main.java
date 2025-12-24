@@ -68,5 +68,15 @@ public class Main {
                 dadosCabecalhos,
                 itens
         );
+
+        if (dadosEscola.get("TEM_CONSOLIDACAO").equals("S")){
+
+            String saidaCons = "src/main/resources/arquivos/ORÇAMENTO NF" + dadosCabecalhos.get("NF") + " " +
+                    dadosCabecalhos.get("ANO_CONSOLIDACAO")+ "-" + dadosCabecalhos.get("MES_CONSOLIDACAO")
+                    + "-" + dadosCabecalhos.get("DIA_CONSOLIDACAO") + " CONSOLIDAÇÃO.docx";
+
+            WordDocsService.gerarConsolidacao("src/main/resources/MODELO CONSOLIDACAO JAVA.docx",
+                    saidaCons,dadosEscola,itens);
+        }
     }
 }

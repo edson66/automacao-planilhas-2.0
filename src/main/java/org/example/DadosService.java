@@ -33,16 +33,16 @@ public class DadosService {
 
                 itemDaLinha.put("ITEM",getCellValue(row.getCell(1)));
 
-                itemDaLinha.put("UN",getCellValue(row.getCell(2)));
+                itemDaLinha.put("UN",getCellValue(row.getCell(5)));
 
-                if (row.getCell(3) != null && row.getCell(3).getCellType() == CellType.NUMERIC) {
-                    itemDaLinha.put("QT", (int) row.getCell(3).getNumericCellValue());
+                if (row.getCell(6) != null && row.getCell(6).getCellType() == CellType.NUMERIC) {
+                    itemDaLinha.put("QT", (int) row.getCell(6).getNumericCellValue());
                 } else {
                     itemDaLinha.put("QT", 0);
                 }
 
-                if (row.getCell(5) != null && row.getCell(5).getCellType() == CellType.NUMERIC) {
-                    itemDaLinha.put("VALOR", row.getCell(5).getNumericCellValue());
+                if (row.getCell(7) != null && row.getCell(7).getCellType() == CellType.NUMERIC) {
+                    itemDaLinha.put("VALOR", row.getCell(7).getNumericCellValue());
                 } else {
                     itemDaLinha.put("VALOR", 0.0);
                 }
