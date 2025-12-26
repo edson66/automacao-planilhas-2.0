@@ -177,9 +177,35 @@ public class DadosService {
             String anoRecibo = scanner.nextLine();
             dadosEscolas.put("ANO_R",anoRecibo);
 
+            System.out.println("Mesma data da nota(S/N)");
+            String dataNota = scanner.nextLine();
+
+            if (dataNota.equalsIgnoreCase("S")){
+                System.out.println("Data da Nota(dia)-");
+                String diaNota = scanner.nextLine();
+                dadosEscolas.put("DIA_N",diaNota);
+
+                System.out.println("Data da Nota(mês)-");
+                String mesNota = scanner.nextLine();
+                dadosEscolas.put("MES_N",mesNota);
+
+                System.out.println("Data da Nota(ano)-");
+                String anoNota = scanner.nextLine();
+                dadosEscolas.put("ANO_N",anoNota);
+            } else if (dataNota.equalsIgnoreCase("N")) {
+                dadosEscolas.put("DIA_N",diaRecibo);
+                dadosEscolas.put("MES_N",String.valueOf(mesRecibo));
+                dadosEscolas.put("ANO_N",anoRecibo);
+            }else {
+                System.out.println("Resposta inválida,considerando como NÃO");
+                dadosEscolas.put("DIA_N",diaRecibo);
+                dadosEscolas.put("MES_N",String.valueOf(mesRecibo));
+                dadosEscolas.put("ANO_N",anoRecibo);
+            }
+
             System.out.println("Pago por meio de-");
             String pagoPor = scanner.nextLine();
-            dadosEscolas.put("MEIO",pagoPor);
+            dadosEscolas.put("MEIO",pagoPor.toUpperCase());
 
         } else if (temReciboStr.equalsIgnoreCase("N")) {
             dadosEscolas.put("TEM_RECIBO","N");
