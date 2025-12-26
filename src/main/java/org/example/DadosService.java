@@ -180,7 +180,7 @@ public class DadosService {
             System.out.println("Mesma data da nota(S/N)");
             String dataNota = scanner.nextLine();
 
-            if (dataNota.equalsIgnoreCase("S")){
+            if (dataNota.equalsIgnoreCase("N")){
                 System.out.println("Data da Nota(dia)-");
                 String diaNota = scanner.nextLine();
                 dadosEscolas.put("DIA_N",diaNota);
@@ -192,7 +192,7 @@ public class DadosService {
                 System.out.println("Data da Nota(ano)-");
                 String anoNota = scanner.nextLine();
                 dadosEscolas.put("ANO_N",anoNota);
-            } else if (dataNota.equalsIgnoreCase("N")) {
+            } else if (dataNota.equalsIgnoreCase("S")) {
                 dadosEscolas.put("DIA_N",diaRecibo);
                 dadosEscolas.put("MES_N",String.valueOf(mesRecibo));
                 dadosEscolas.put("ANO_N",anoRecibo);
