@@ -51,7 +51,6 @@ public class DadosService {
                 linhaAtual++;
             }
 
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -146,9 +145,9 @@ public class DadosService {
             String anoConsolidacao = scanner.nextLine();
             dadosEscolas.put("ANO_CONSOLIDACAO",anoConsolidacao);
 
-            String dataConsolidacao = diaConsolidacao + " DE " +
+            String dataConsolidacao = diaConsolidacao + " de " +
                     OrcamentosService.formatarTextoTitle(meses[mesConsolidacao-1]) +
-                    " DE " + anoConsolidacao;
+                    " de " + anoConsolidacao;
             dadosEscolas.put("DATA_CONS",dataConsolidacao);
 
 
@@ -170,9 +169,9 @@ public class DadosService {
             String diaRecibo = scanner.nextLine();
             dadosEscolas.put("DIA_R",diaRecibo);
 
-            System.out.println("Data do Recibo(mês)-");
-            String mesRecibo = scanner.nextLine();
-            dadosEscolas.put("MES_R",mesRecibo);
+            int mesRecibo = verificarMesValido();
+            dadosEscolas.put("MES_R", String.valueOf(mesRecibo));
+            dadosEscolas.put("MES_R_EXTENSO",meses[mesRecibo -1]);
 
             System.out.println("Data do Recibo(ano)-");
             String anoRecibo = scanner.nextLine();
@@ -220,11 +219,11 @@ public class DadosService {
                 minPctPaper = 0.25; maxPctPaper = 0.30;
                 minPctGrafite = 0.30; maxPctGrafite = 0.35;
             } else if (valorAtual < 50.00) {
-                minPctPaper = 0.15; maxPctPaper = 0.25;
-                minPctGrafite = 0.15; maxPctGrafite = 0.25;
+                minPctPaper = 0.10; maxPctPaper = 0.20;
+                minPctGrafite = 0.10; maxPctGrafite = 0.20;
             } else {
-                minPctPaper = 0.10; maxPctPaper = 0.12;
-                minPctGrafite = 0.10; maxPctGrafite = 0.13;
+                minPctPaper = 0.08; maxPctPaper = 0.12;
+                minPctGrafite = 0.08; maxPctGrafite = 0.13;
             }
 
             double pctPaper = minPctPaper + (maxPctPaper - minPctPaper) * random.nextDouble();
@@ -242,6 +241,27 @@ public class DadosService {
 
             cachePrecos.put(valorAtual, new Double[]{valorPaper, valorGrafite});
         }
+    }
+
+    public static double calcularTotalGeral(List<Map<String, Object>> itens) {
+        double total = 0.0;
+
+        for (Map<String, Object> item : itens) {
+            double quantidade = 0.0;
+            Object qtObj = item.get("QT");
+
+            if (qtObj instanceof Number) {
+                quantidade = ((Number) qtObj).doubleValue();
+            }
+
+            Double valor = (Double) item.get("VALOR");
+
+            if (valor != null) {
+                total += (valor * quantidade);
+            }
+        }
+
+        return total;
     }
 
     private static int verificarMesValido() {

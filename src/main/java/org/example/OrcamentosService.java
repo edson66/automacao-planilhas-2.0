@@ -226,6 +226,71 @@ public class OrcamentosService {
         }
     }
 
+    public static void preencherControle(String caminhoEntrada, String caminhoSaida,
+                                        List<Map<String,Object>> itens){
+
+        try(FileInputStream inputStream = new FileInputStream(new File(caminhoEntrada));
+            Workbook workbook = new XSSFWorkbook(inputStream)){
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            int linhaInicialTabela = 2;
+
+            for (Map<String,Object> item:itens){
+                Row row = sheet.getRow(linhaInicialTabela);
+
+                if (row == null) {
+                    System.out.println("AVISO: O template do controle acabou na linha " + linhaInicialTabela + ". Item ignorado.");
+                    break;
+                }
+
+                Cell cellItem = row.getCell(1);
+                if (cellItem == null) cellItem = row.createCell(1);
+                cellItem.setCellValue(String.valueOf(item.getOrDefault("ITEM","")));
+
+                Cell cellUn = row.getCell(2);
+                if (cellUn == null) cellUn = row.createCell(2);
+                cellUn.setCellValue(String.valueOf(item.getOrDefault("UN","")));
+
+                Cell cellQT = row.getCell(3);
+                if (cellQT == null) cellQT = row.createCell(3);
+                Object qtObj = item.get(("QT"));
+                double qtValue = (qtObj instanceof Number)? ((Number) qtObj).doubleValue():0.0;
+                cellQT.setCellValue(qtValue);
+
+                Cell cellValor = row.getCell(4);
+                if (cellValor == null) cellValor = row.createCell(4);
+                Object valorObj = item.get("VALOR");
+                double valorValue = (valorObj instanceof Number)? ((Number) valorObj).doubleValue():0.0;
+                cellValor.setCellValue(valorValue);
+
+                Cell cellValorPaper = row.getCell(7);
+                if (cellValorPaper == null) cellValorPaper = row.createCell(4);
+                Object valorObjPaper = item.get("VALOR_PAPER");
+                double valorValuePaper = (valorObjPaper instanceof Number)? ((Number) valorObjPaper).doubleValue():0.0;
+                cellValorPaper.setCellValue(valorValuePaper);
+
+                Cell cellValorGrafite = row.getCell(10);
+                if (cellValorGrafite == null) cellValorGrafite = row.createCell(4);
+                Object valorObjGrafite = item.get("VALOR_GRAFITE");
+                double valorValueGrafite = (valorObjGrafite instanceof Number)? ((Number) valorObjGrafite).doubleValue():0.0;
+                cellValorGrafite.setCellValue(valorValueGrafite);
+
+                linhaInicialTabela++;
+            }
+
+            workbook.setForceFormulaRecalculation(true);
+
+            try(FileOutputStream outputStream = new FileOutputStream(new File(caminhoSaida))){
+                workbook.write(outputStream);
+            }
+            System.out.println("CONTROLE gerado.");
+
+        }catch (IOException e){
+            throw new RuntimeException("Erro ao processar CONTROLE: " + e.getMessage());
+        }
+    }
+
     public static String formatarTextoTitle(String texto) {
         if (texto == null || texto.isEmpty()) {
             return "";

@@ -36,7 +36,7 @@ public class Main {
         List<Map<String,Object>> itens = DadosService.lerArquivoDoador("src/main/resources/" + arq + ".xlsx");
         DadosService.aplicarRegrasDeNegocio(itens);
 
-
+        double totalNce = DadosService.calcularTotalGeral(itens);
 
 
         String saidaNce = "src/main/resources/arquivos/ORÇAMENTO NF" + dadosCabecalhos.get("NF") + " " +
@@ -69,6 +69,15 @@ public class Main {
                 itens
         );
 
+        String saidaControle = "src/main/resources/arquivos/ORÇAMENTO NF" + dadosCabecalhos.get("NF") + " " +
+                dadosCabecalhos.get("ANO_ORCAMENTOS")+ "-" + dadosCabecalhos.get("MES_ORCAMENTOS")
+                + "-" + dadosCabecalhos.get("DIA_ORCAMENTOS") + " CONTROLE.xlsx";
+        OrcamentosService.preencherControle(
+                "src/main/resources/MODELO CONTROLE.xlsx",
+                saidaControle,
+                itens
+        );
+
         if (dadosEscola.get("TEM_CONSOLIDACAO").equals("S")){
 
             String saidaCons = "src/main/resources/arquivos/ORÇAMENTO NF" + dadosCabecalhos.get("NF") + " " +
@@ -76,7 +85,17 @@ public class Main {
                     + "-" + dadosCabecalhos.get("DIA_CONSOLIDACAO") + " CONSOLIDAÇÃO.docx";
 
             WordDocsService.gerarConsolidacao("src/main/resources/MODELO CONSOLIDACAO JAVA.docx",
-                    saidaCons,dadosEscola,itens);
+                    saidaCons,dadosEscola,itens,totalNce);
+        }
+
+        if (dadosEscola.get("TEM_RECIBO").equals("S")){
+
+            String saidaRecibo = "src/main/resources/arquivos/ORÇAMENTO NF" + dadosCabecalhos.get("NF") + " " +
+                    dadosCabecalhos.get("ANO_R")+ "-" + dadosCabecalhos.get("MES_R")
+                    + "-" + dadosCabecalhos.get("DIA_R") + " RECIBO.docx";
+
+            WordDocsService.gerarRecibo("src/main/resources/MODELO RECIBO.docx",
+                    saidaRecibo,dadosEscola,totalNce);
         }
     }
 }
